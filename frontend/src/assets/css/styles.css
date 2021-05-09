@@ -31,3 +31,9 @@ html, body {
 .text-primary {
     color: var(--color-primary) !important;
 }
+
+.center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+}

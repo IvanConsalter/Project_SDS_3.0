@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Chart from "react-apexcharts";
 import { SaleSum } from "types/sale";
 import { BASE_URL } from "utils/requests";
+import Spinner from "react-bootstrap/Spinner"
 
 type ChartData = {
     labels: string[];
@@ -15,6 +16,8 @@ const DonutChart = () => {
         series: [],
     });
 
+    const [loading, setLoading] = useState(false);
+
     useEffect(() => {
         axios.get(`${BASE_URL}/sales/amount-by-seller`).then((response) => {
             const data = response.data as SaleSum[];
@@ -22,6 +25,7 @@ const DonutChart = () => {
             const mySeries = data.map((x) => x.sum);
 
             setChartData({ labels: myLabels, series: mySeries });
+            setLoading(true);
         });
     }, []);
     /*
@@ -37,12 +41,20 @@ const DonutChart = () => {
     };
 
     return (
-        <Chart
-            options={{ ...options, labels: chartData.labels }}
-            series={chartData.series}
-            type="donut"
-            height="240"
-        />
+        <div className="position-relative">
+            {loading ? <Chart
+                options={{ ...options, labels: chartData.labels }}
+                series={chartData.series}
+                type="donut"
+                height="240"
+                /> 
+                : 
+                < Spinner animation="border" className="center" />
+                }
+            
+
+                
+        </div>
     );
 };
 

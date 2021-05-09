@@ -4,6 +4,7 @@ import Chart from "react-apexcharts";
 import { SaleSuccess } from "types/sale";
 import { round } from "utils/format";
 import { BASE_URL } from "utils/requests";
+import Spinner from "react-bootstrap/Spinner";
 
 type SeriesData = {
     name: string;
@@ -30,6 +31,8 @@ const BarChart = () => {
         ],
     });
 
+    const [loading, setLoading] = useState(false);
+
     useEffect(() => {
         axios.get(`${BASE_URL}/sales/success-by-seller`).then((response) => {
             const data = response.data as SaleSuccess[];
@@ -47,6 +50,7 @@ const BarChart = () => {
                     },
                 ]
             });
+            setLoading(true);
         });
     }, []);
 
@@ -73,12 +77,16 @@ const BarChart = () => {
     */
 
     return (
-        <Chart
-            options={{ ...options, xaxis: chartData.labels }}
-            series={chartData.series}
-            type="bar"
-            height="240"
-        />
+        <div className="position-relative">
+            {loading ? <Chart
+                options={{ ...options, xaxis: chartData.labels }}
+                series={chartData.series}
+                type="bar"
+                height="240"
+                /> 
+                : 
+                <Spinner animation="border" className="center" />}
+        </div>
     );
 };
 
